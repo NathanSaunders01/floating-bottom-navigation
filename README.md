@@ -1,6 +1,6 @@
 ## Floating Bottom Navigator
 
-##### React Native navigator using `react-native-reanimated`, `react-native-gesture-handler`, `react-native-svg` and `react-native-redash`
+##### React Native navigator using [react-native-reanimated](https://github.com/software-mansion/react-native-reanimated), [react-native-gesture-handler](https://github.com/software-mansion/react-native-gesture-handler), [react-native-svg](https://github.com/react-native-community/react-native-svg) and [react-native-redash](https://github.com/wcandillon/react-native-redash)
 
 ### Preview
 
