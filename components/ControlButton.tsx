@@ -207,8 +207,8 @@ function ControlButton({ index, translateX, offsetX, icon, gestureState }) {
           <Svg width={cbDims} height={cbDims}>
             <Defs>
               <LinearGradient id="linear" x1="0%" y1="0%" x2="0%" y2="100%">
-                <Stop offset="0%" stopColor="##FFA500" />
-                <Stop offset="50%" stopColor="#ffc966" />
+                <Stop offset="0%" stopColor="#FFA500" />
+                <Stop offset="50%" stopColor="#FFC966" />
               </LinearGradient>
             </Defs>
             <G id="circle" rotation="-90" origin={`${cbRadius}, ${cbRadius}`}>
