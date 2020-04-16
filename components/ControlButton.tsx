@@ -8,11 +8,11 @@ import {
   timing,
   bInterpolate,
   approximates,
-  useValues
+  useValues,
 } from "react-native-redash";
 import {
   TapGestureHandler,
-  State as TapState
+  State as TapState,
 } from "react-native-gesture-handler";
 import Svg, {
   Circle,
@@ -20,14 +20,14 @@ import Svg, {
   Use,
   Defs,
   LinearGradient,
-  Stop
+  Stop,
 } from "react-native-svg";
 import {
   cbDims,
   scaleOutputRange,
   opacityOutputRange,
   cbRadius,
-  cbStrokeWidth
+  cbStrokeWidth,
 } from "../shared/configs";
 import ControlOptions from "./ControlOptions";
 
@@ -45,7 +45,7 @@ const {
   not,
   onChange,
   clockRunning,
-  createAnimatedComponent
+  createAnimatedComponent,
 } = Animated;
 
 const AnimatedCircle = createAnimatedComponent(Circle);
@@ -62,7 +62,7 @@ function ControlButton({ index, translateX, offsetX, icon, gestureState }) {
   const gestureHandler = onGestureEvent({ state: tapState });
 
   const optionsTransition = withTimingTransition(optionsState, {
-    duration: 220
+    duration: 220,
   });
 
   useCode(
@@ -85,26 +85,37 @@ function ControlButton({ index, translateX, offsetX, icon, gestureState }) {
 
   useCode(() => cond(eq(tapState, TapState.END), set(shouldSwitch, 1)), []);
 
+  // WITH TAP TO MENU - NOT REALLY WORKING
+  // useCode(
+  //   () =>
+  //     cond(eq(shouldSwitch, 1), [
+  //       cond(
+  //         not(isCentered),
+  //         set(
+  //           offsetX,
+  //           timing({
+  //             clock,
+  //             duration: 320,
+  //             from: offsetX,
+  //             to: xPos,
+  //             easing: Easing.linear
+  //           })
+  //         )
+  //       ),
+  //       cond(and(not(clockRunning(clock)), eq(xPos, offsetX)), [
+  //         set(shouldSwitch, 0)
+  //       ]),
+  //       set(optionsState, not(optionsState))
+  //     ]),
+  //   []
+  // );
+
+  // NO TAP TO MENU - WORKING
   useCode(
     () =>
-      cond(eq(shouldSwitch, 1), [
-        cond(
-          not(isCentered),
-          set(
-            offsetX,
-            timing({
-              clock,
-              duration: 320,
-              from: offsetX,
-              to: xPos,
-              easing: Easing.linear
-            })
-          )
-        ),
-        cond(and(not(clockRunning(clock)), eq(xPos, offsetX)), [
-          set(shouldSwitch, 0)
-        ]),
-        set(optionsState, not(optionsState))
+      cond(and(isCentered, eq(shouldSwitch, 1)), [
+        set(optionsState, not(optionsState)),
+        set(shouldSwitch, 0),
       ]),
     []
   );
@@ -112,30 +123,30 @@ function ControlButton({ index, translateX, offsetX, icon, gestureState }) {
   const inputRange = [
     (index - 2) * cbDims,
     (index - 1) * cbDims,
-    index * cbDims
+    index * cbDims,
   ];
 
   const scale = interpolate(multiply(translateX, -1), {
     inputRange,
     outputRange: scaleOutputRange,
-    extrapolate: Extrapolate.CLAMP
+    extrapolate: Extrapolate.CLAMP,
   });
 
   const translateY = interpolate(multiply(translateX, -1), {
     inputRange,
     outputRange: [0.15 * cbDims, 0, 0.15 * cbDims],
-    extrapolate: Extrapolate.CLAMP
+    extrapolate: Extrapolate.CLAMP,
   });
 
   const opacity = interpolate(multiply(translateX, -1), {
     inputRange,
     outputRange: opacityOutputRange,
-    extrapolate: Extrapolate.CLAMP
+    extrapolate: Extrapolate.CLAMP,
   });
 
   const animatedStyled = {
     transform: [{ scale }, { translateY }],
-    opacity
+    opacity,
   };
 
   const openIconStyles = {
@@ -144,22 +155,22 @@ function ControlButton({ index, translateX, offsetX, icon, gestureState }) {
         rotate: interpolate(optionsTransition, {
           inputRange: [0, 0.5],
           outputRange: [0, 22],
-          extrapolate: Extrapolate.CLAMP
-        })
+          extrapolate: Extrapolate.CLAMP,
+        }),
       },
       {
         scale: interpolate(optionsTransition, {
           inputRange: [0, 0.4],
           outputRange: [1, 0],
-          extrapolate: Extrapolate.CLAMP
-        })
-      }
+          extrapolate: Extrapolate.CLAMP,
+        }),
+      },
     ],
     opacity: interpolate(optionsTransition, {
       inputRange: [0, 0.4],
       outputRange: [1, 0],
-      extrapolate: Extrapolate.CLAMP
-    })
+      extrapolate: Extrapolate.CLAMP,
+    }),
   };
 
   const closeIconStyles = {
@@ -168,22 +179,22 @@ function ControlButton({ index, translateX, offsetX, icon, gestureState }) {
         rotate: interpolate(optionsTransition, {
           inputRange: [0.5, 1],
           outputRange: [0, 22],
-          extrapolate: Extrapolate.CLAMP
-        })
+          extrapolate: Extrapolate.CLAMP,
+        }),
       },
       {
         scale: interpolate(optionsTransition, {
           inputRange: [0.6, 1],
           outputRange: [0, 1],
-          extrapolate: Extrapolate.CLAMP
-        })
-      }
+          extrapolate: Extrapolate.CLAMP,
+        }),
+      },
     ],
     opacity: interpolate(optionsTransition, {
       inputRange: [0.6, 1],
       outputRange: [0, 1],
-      extrapolate: Extrapolate.CLAMP
-    })
+      extrapolate: Extrapolate.CLAMP,
+    }),
   };
 
   const strokeDasharray = 2 * Math.PI * (cbRadius - cbStrokeWidth / 2);
@@ -196,8 +207,8 @@ function ControlButton({ index, translateX, offsetX, icon, gestureState }) {
           <Svg width={cbDims} height={cbDims}>
             <Defs>
               <LinearGradient id="linear" x1="0%" y1="0%" x2="0%" y2="100%">
-                <Stop offset="0%" stopColor="#e75480" />
-                <Stop offset="50%" stopColor="#d11d53" />
+                <Stop offset="0%" stopColor="##FFA500" />
+                <Stop offset="50%" stopColor="#ffc966" />
               </LinearGradient>
             </Defs>
             <G id="circle" rotation="-90" origin={`${cbRadius}, ${cbRadius}`}>
@@ -234,7 +245,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     zIndex: 10,
-    overflow: "visible"
+    overflow: "visible",
   },
   button: {
     height: cbDims,
@@ -243,9 +254,9 @@ const styles = StyleSheet.create({
     borderRadius: cbRadius,
     zIndex: 1,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   icon: {
-    position: "absolute"
-  }
+    position: "absolute",
+  },
 });

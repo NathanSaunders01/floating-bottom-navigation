@@ -1,16 +1,32 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Animated from "react-native-reanimated";
 import {
   withSpringTransition,
   bInterpolate,
-  useValues
+  useValues,
 } from "react-native-redash";
 import { cbDims, optionSpringConfig, optionIcons } from "../shared/configs";
 
 const { interpolate, Extrapolate, useCode, cond, greaterThan, set } = Animated;
 
-function OptionButton({ index, icon, optionsTransition }) {
+function getIcon(icon) {
+  switch (icon) {
+    case "email":
+      return <MaterialIcons name="email" size={24} color="black" />;
+    case "todo":
+      return (
+        <MaterialIcons name="playlist-add-check" size={24} color="black" />
+      );
+    case "habit":
+      return (
+        <MaterialCommunityIcons name="calendar-check" size={24} color="black" />
+      );
+  }
+}
+
+function OptionButton({ index, icon: iconName, optionsTransition }) {
   const [optionState] = useValues([0], []);
   const optionTransition = withSpringTransition(
     optionState,
@@ -37,19 +53,19 @@ function OptionButton({ index, icon, optionsTransition }) {
   const opacity = interpolate(optionTransition, {
     inputRange: [0, 0.35],
     outputRange: [0, 1],
-    extrapolateLeft: Extrapolate.CLAMP
+    extrapolateLeft: Extrapolate.CLAMP,
   });
 
   const animatedStyles = {
     transform: [{ translateX }, { translateY }],
-    opacity
+    opacity,
   };
+
+  const icon = getIcon(iconName);
 
   return (
     <Animated.View style={[styles.option, animatedStyles]}>
-      <TouchableOpacity style={styles.optionButton}>
-        <Text style={styles.optionText}>{icon}</Text>
-      </TouchableOpacity>
+      <TouchableOpacity style={styles.optionButton}>{icon}</TouchableOpacity>
     </Animated.View>
   );
 }
@@ -77,14 +93,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     height: cbDims / 1.5,
     width: cbDims / 1.5,
-    borderRadius: cbDims / 3
+    borderRadius: cbDims / 3,
   },
   optionButton: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   optionText: {
-    fontSize: 24
-  }
+    fontSize: 24,
+  },
 });
